@@ -5,12 +5,14 @@ import com.ergodic.friends.service.FriendService;
 import com.ergodic.friends.util.ErrorMessage;
 import com.ergodic.friends.util.FieldErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.xml.bind.ValidationException;
 import java.util.List;
 import java.util.Optional;
@@ -23,12 +25,20 @@ public class FriendController {
     FriendService friendService;
 
     @PostMapping("/friend")
-    Friend create (@RequestBody Friend friend) throws ValidationException {
-        if (friend.getId() == 0 && friend.getFirstName() != null && friend.getLastName() != null)
+    Friend create (@Valid @RequestBody Friend friend) {
             return friendService.save(friend);
-        else throw new ValidationException("friend cannot be created");
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    List<FieldErrorMessage> exceptionHandler(MethodArgumentNotValidException e){
+        List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
+        List<FieldErrorMessage> fieldErrorMessages = fieldErrors.stream().map(fieldError -> {
+            return new FieldErrorMessage(fieldError.getField(), fieldError.getDefaultMessage());
+        }).collect(Collectors.toList());
+
+        return fieldErrorMessages;
+    }
     @GetMapping("/friend")
     Iterable<Friend> read() {
         return friendService.findAll();
