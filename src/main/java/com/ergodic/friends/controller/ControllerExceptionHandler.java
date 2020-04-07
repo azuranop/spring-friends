@@ -16,6 +16,13 @@ public class ControllerExceptionHandler {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler
+    ErrorMessage exceptionHandler(ValidationException e){
+        return new ErrorMessage("400", e.getMessage());
+    }
+    /*
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     List<FieldErrorMessage> exceptionHandler(MethodArgumentNotValidException e){
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
@@ -24,4 +31,6 @@ public class ControllerExceptionHandler {
 
         return fieldErrorMessages;
     }
+
+     */
 }

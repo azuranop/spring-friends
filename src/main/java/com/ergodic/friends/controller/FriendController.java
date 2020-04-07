@@ -29,12 +29,6 @@ public class FriendController {
         else throw new ValidationException("friend cannot be created");
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler
-    ErrorMessage exceptionHandler(ValidationException e){
-        return new ErrorMessage("400", e.getMessage());
-    }
-
     @GetMapping("/friend")
     Iterable<Friend> read() {
         return friendService.findAll();
