@@ -66,4 +66,15 @@ public class FriendController {
     {
         return friendService.findByFirstNameAndLastName(firstName, lastName);
     }
+
+    @GetMapping("/wrong")
+    Friend somethingIsWrong() throws ValidationException {
+        throw new ValidationException("Something is wrong");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ValidationException.class)
+    String exceptionHandler(ValidationException e) {
+        return e.getMessage();
+    }
 }

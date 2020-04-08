@@ -18,6 +18,14 @@ public class Friend {
     @JsonProperty("last-name")
     private String lastName;
 
+    public Friend(@NotBlank String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public Friend() {
+    }
+
     int age;
     @JsonIgnore
     boolean married;
